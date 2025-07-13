@@ -7,7 +7,7 @@ from google.cloud.firestore_v1 import SERVER_TIMESTAMP
 
 # Import Cloud Functions and HTTP types
 from firebase_functions import https_fn
-from flask import Response, Request, Flask, request  # <-- Import Request, Flask, and request from flask
+from flask import Response, Request  # Only import what's used
 
 # --- Global variables for lazy initialization ---
 _firebase_app = None
@@ -81,16 +81,3 @@ def receive_fylgja_message(request: Request) -> Response:  # <-- Use flask.Reque
         "message": "Message received by Fylgja!",
     }
     return Response(str(response_message), status=200, mimetype="application/json")
-
-
-app = Flask(__name__)
-
-
-@app.route("/", methods=["POST", "GET"])
-def local_entrypoint():
-    return receive_fylgja_message(request)
-
-
-if __name__ == "__main__":
-    # For local development/testing only; use waitress-serve for production
-    app.run(host="127.0.0.1", port=8081, debug=False)
