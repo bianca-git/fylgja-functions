@@ -92,21 +92,22 @@
 - [ ] Build web UI (check-in prompt, task list, summaries)
 - [ ] Implement backend endpoints (check-ins, tasks, summaries)
 - [ ] Integrate backend with Firestore
-- [ ] Integrate NLP service for task/intent extraction
+- [ ] Integrate NLP service for task/intent extraction (using Genkit via a Node.js Cloud Function)
 - [ ] Implement reminders (scheduled functions or client-side notifications)
 - [ ] Implement weekly/monthly summaries
 - [ ] Test end-to-end flow and refine UX
 
 ---
 
-## Implementation Plan: Fylgja Web UI with Firebase Backend
+
+## Implementation Plan: Fylgja Web UI with Firebase Backend (with Genkit AI Integration)
 
 ### 1. Core Components
 
 - **Frontend:** Simple web UI for check-ins, task entry, and summaries (hosted on Firebase Hosting).
 - **Backend:** Firebase Cloud Functions (Python) for API endpoints and logic.
 - **Database:** Firestore for user/task/reminder data.
-- **NLP Service:** Dialogflow, Wit.ai, or custom model for parsing user input.
+- **NLP/AI Service:** Genkit (Node.js Cloud Function) for parsing user input and extracting tasks/intents.
 
 ### 2. Rollout Steps
 
@@ -127,8 +128,10 @@
 - HTTP endpoints for submitting check-ins, updating tasks, fetching summaries.
 - Integrate with Firestore for data storage.
 
-**Step 5: Integrate NLP**
-- On task submission, send text to NLP service for parsing/classification.
+**Step 5: Integrate NLP/AI with Genkit**
+- Create a Node.js Cloud Function using Genkit for NLP (task/intent extraction).
+- On task submission or check-in, send user text to the Genkit function via HTTP from your Python backend.
+- Use the Genkit response to extract and log tasks/intents in Firestore.
 
 **Step 6: Reminders & Summaries**
 - Use scheduled functions or client-side notifications for reminders.
