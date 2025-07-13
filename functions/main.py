@@ -7,7 +7,7 @@ from google.cloud.firestore_v1 import SERVER_TIMESTAMP
 
 # Import Cloud Functions and HTTP types
 from firebase_functions import https_fn
-from flask import Response, Request  # <-- Import Request from flask
+from flask import Response, Request, Flask, request  # <-- Import Request, Flask, and request from flask
 
 # --- Global variables for lazy initialization ---
 _firebase_app = None
@@ -37,7 +37,9 @@ def receive_fylgja_message(request: Request) -> Response:  # <-- Use flask.Reque
     db = _firestore_db
     if db is None:
         print("ERROR: Firestore client is not initialized.")
-        return Response("Internal Server Error: Firestore client not initialized", status=500)
+        return Response(
+            "Internal Server Error: Firestore client not initialized", status=500
+        )
 
     print("----- Fylgja Received a Message! -----")
     print(f"Request Method: {request.method}")
@@ -80,3 +82,15 @@ def receive_fylgja_message(request: Request) -> Response:  # <-- Use flask.Reque
     }
     return Response(str(response_message), status=200, mimetype="application/json")
 
+
+app = Flask(__name__)
+
+
+@app.route("/", methods=["POST", "GET"])
+def local_entrypoint():
+    return receive_fylgja_message(request)
+
+
+if __name__ == "__main__":
+    # For local development/testing only; use waitress-serve for production
+    app.run(host="127.0.0.1", port=8081, debug=False)
