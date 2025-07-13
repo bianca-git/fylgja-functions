@@ -1,83 +1,80 @@
 # functions/main.py
-
-# Import necessary Firebase libraries
+from firebase_functions import https_fn
+from flask import Request, Response
 import firebase_admin
 from firebase_admin import firestore
-from google.cloud.firestore_v1 import SERVER_TIMESTAMP
+from google.cloud import firestore as gcf
+import json
+import datetime
 
-# Import Cloud Functions and HTTP types
-from firebase_functions import https_fn
-from flask import Response, Request  # Only import what's used
-
-# --- Global variables for lazy initialization ---
 _firebase_app = None
 _firestore_db = None
 
-# --- Cloud Function: Fylgja's Message Receiver ---
 
-
-@https_fn.on_request(timeout_sec=300)
-def receive_fylgja_message(request: Request) -> Response:  # <-- Use flask.Request
-    """
-    This function listens for incoming HTTP requests, acting as a webhook
-    for messaging platforms like WhatsApp or Facebook Messenger.
-    """
+def get_db():
     global _firebase_app, _firestore_db
-
-    # Lazy initialization: Only initialize if not already done
     if _firebase_app is None or _firestore_db is None:
-        try:
-            _firebase_app = firebase_admin.initialize_app()
-            _firestore_db = firestore.client()
-            print("Firebase App and Firestore client initialized successfully.")
-        except Exception as e:
-            print(f"ERROR: Failed to initialize Firebase app or Firestore client: {e}")
-            return Response("Internal Server Error during initialization", status=500)
+        _firebase_app = firebase_admin.initialize_app()
+        _firestore_db = firestore.client()
+    return _firestore_db
 
-    db = _firestore_db
-    if db is None:
-        print("ERROR: Firestore client is not initialized.")
-        return Response(
-            "Internal Server Error: Firestore client not initialized", status=500
-        )
 
-    print("----- Fylgja Received a Message! -----")
-    print(f"Request Method: {request.method}")
-    print(f"Request Headers: {request.headers}")
-    print(f"Request Body (JSON): {request.json}")
-    print(f"Request Body (Form Data): {request.form}")
+# --- Endpoint: Submit Check-in ---
+@https_fn.on_request()
+def checkin(request: Request) -> Response:
+    db = get_db()
+    data = request.get_json()
+    text = data.get("text", "")
+    user_id = "demo-user"  # Replace with real user auth in production
+    # TODO: Integrate NLP here to extract tasks/status
+    db.collection("checkins").add(
+        {"userId": user_id, "text": text, "timestamp": gcf.SERVER_TIMESTAMP}
+    )
+    return Response("Check-in received", status=200)
 
-    # --- Placeholder: Extract Message Data ---
-    user_id = "test_user_123"
-    message_text = "Hey Fylgja. Today I finished the presentation!"
 
-    print(f"Extracted User ID: {user_id}")
-    print(f"Extracted Message Text: '{message_text}'")
+# --- Endpoint: Get Tasks ---
+@https_fn.on_request()
+def get_tasks(request: Request) -> Response:
+    db = get_db()
+    user_id = "demo-user"
+    tasks_ref = db.collection("tasks").where("userId", "==", user_id)
+    tasks = []
+    for doc in tasks_ref.stream():
+        t = doc.to_dict()
+        t["id"] = doc.id
+        tasks.append(t)
+    return Response(
+        json.dumps({"tasks": tasks}), status=200, mimetype="application/json"
+    )
 
-    # 2. Store the raw incoming message in Firestore (Fylgja's Memory)
-    try:
-        incoming_message_data = {
-            "userId": user_id,
-            "timestamp": SERVER_TIMESTAMP,  # <-- Fixed: use imported SERVER_TIMESTAMP
-            "rawRequest": {
-                "method": request.method,
-                "headers": dict(request.headers),
-                "jsonBody": request.json,
-                "formBody": dict(request.form),
-            },
-        }
-        # Add a new document to the 'incomingMessages' collection
-        doc_ref = db.collection("incomingMessages").add(incoming_message_data)
-        print(f"Successfully logged message to Firestore. Document ID: {doc_ref[1].id}")
 
-    except Exception as e:
-        print(f"Error logging message to Firestore: {e}")
-        return Response(f"Error processing message: {e}", status=500)
+# --- Endpoint: Mark Task Done ---
+@https_fn.on_request()
+def mark_task_done(request: Request) -> Response:
+    db = get_db()
+    task_id = request.path.split("/")[-2]
+    task_ref = db.collection("tasks").document(task_id)
+    task_ref.update({"status": "Done", "dateCompleted": datetime.datetime.utcnow()})
+    return Response("Task marked as done", status=200)
 
-    # 3. Respond to the messaging platform
-    response_message = {
-        "status": "success",
-        "received": True,
-        "message": "Message received by Fylgja!",
-    }
-    return Response(str(response_message), status=200, mimetype="application/json")
+
+# --- Endpoint: Get Summary ---
+@https_fn.on_request()
+def get_summary(request: Request) -> Response:
+    db = get_db()
+    user_id = "demo-user"
+    # Simple summary: count done/to-do
+    tasks_ref = db.collection("tasks").where("userId", "==", user_id)
+    done = 0
+    todo = 0
+    for doc in tasks_ref.stream():
+        t = doc.to_dict()
+        if t.get("status") == "Done":
+            done += 1
+        else:
+            todo += 1
+    summary = f"You have completed {done} tasks. {todo} still to do!"
+    return Response(
+        json.dumps({"summary": summary}), status=200, mimetype="application/json"
+    )

@@ -70,13 +70,69 @@
 
 **6. Technical & Logic Notes**
 
-* **Platform:** Utilizes WhatsApp Business API or Facebook Messenger Platform.
-* **Backend:** A simple server (e.g., using Node.js or Python) to handle the logic.
-* **NLP Service:** A service like Dialogflow, Wit.ai, or even a custom-trained model for more nuanced understanding.
-* **Database:** A straightforward database (like Firestore or a simple SQL database) with a table structure like:
+* **Platform:** Simple web UI (React, Vue, or plain HTML/JS) hosted with Firebase Hosting.
+* **Backend:** Firebase Cloud Functions (Python) for business logic and API endpoints.
+* **NLP Service:** A service like Dialogflow, Wit.ai, or a custom-trained model for task/intent extraction.
+* **Database:** Firestore with a structure like:
     * `UserID`
     * `TaskDescription`
     * `Status` (Done, To-Do)
     * `DateCreated`
     * `DateCompleted`
     * `ReminderTime` (nullable)
+
+---
+
+
+## Implementation Checklist
+
+- [x] Set up Firebase project, enable Firestore and Cloud Functions (Python)
+- [ ] Set up Firebase Hosting for the web UI
+- [ ] Design Firestore schema (`users`, `tasks` collections)
+- [ ] Build web UI (check-in prompt, task list, summaries)
+- [ ] Implement backend endpoints (check-ins, tasks, summaries)
+- [ ] Integrate backend with Firestore
+- [ ] Integrate NLP service for task/intent extraction
+- [ ] Implement reminders (scheduled functions or client-side notifications)
+- [ ] Implement weekly/monthly summaries
+- [ ] Test end-to-end flow and refine UX
+
+---
+
+## Implementation Plan: Fylgja Web UI with Firebase Backend
+
+### 1. Core Components
+
+- **Frontend:** Simple web UI for check-ins, task entry, and summaries (hosted on Firebase Hosting).
+- **Backend:** Firebase Cloud Functions (Python) for API endpoints and logic.
+- **Database:** Firestore for user/task/reminder data.
+- **NLP Service:** Dialogflow, Wit.ai, or custom model for parsing user input.
+
+### 2. Rollout Steps
+
+**Step 1: Set Up Firebase Project**
+- Create Firebase project, enable Firestore and Cloud Functions (Python runtime).
+- Set up Firebase Hosting for the web UI.
+
+**Step 2: Design Firestore Schema**
+- `users` collection: user profile, preferences.
+- `tasks` collection: `userId`, `taskDescription`, `status`, `dateCreated`, `dateCompleted`, `reminderTime`.
+
+**Step 3: Build Web UI**
+- Daily check-in prompt and input form.
+- Task list with "Done" and "To-Do" sections.
+- Add/complete/edit tasks, display summaries, friendly persona.
+
+**Step 4: Implement Backend Endpoints**
+- HTTP endpoints for submitting check-ins, updating tasks, fetching summaries.
+- Integrate with Firestore for data storage.
+
+**Step 5: Integrate NLP**
+- On task submission, send text to NLP service for parsing/classification.
+
+**Step 6: Reminders & Summaries**
+- Use scheduled functions or client-side notifications for reminders.
+- Scheduled backend function to generate/store summaries; UI fetches and displays them.
+
+**Step 7: Testing & Iteration**
+- Test end-to-end flow, refine NLP and user experience.

@@ -1,0 +1,69 @@
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #f7f8fa;
+  margin: 0;
+  padding: 0;
+  color: #222;
+}
+#app {
+  max-width: 600px;
+  margin: 2rem auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 2rem;
+}
+h1 {
+  text-align: center;
+  color: #6c47ff;
+}
+.checkin-section, .tasks-section, .summary-section {
+  margin-bottom: 2rem;
+}
+#checkin-form textarea {
+  width: 100%;
+  min-height: 60px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+#checkin-form button {
+  background: #6c47ff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+#tasks-list {
+  list-style: none;
+  padding: 0;
+}
+#tasks-list li {
+  background: #f1f0ff;
+  margin-bottom: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+#tasks-list li.done {
+  text-decoration: line-through;
+  color: #aaa;
+}
+.task-actions button {
+  background: none;
+  border: none;
+  color: #6c47ff;
+  cursor: pointer;
+  font-size: 1rem;
+}
+.summary-section {
+  background: #f9f9fb;
+  border-radius: 6px;
+  padding: 1rem;
+}

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fylgja Check-in Bot</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <h1>Fylgja 🧚‍♀️</h1>
+    <div class="checkin-section">
+      <h2>Daily Check-in</h2>
+      <form id="checkin-form">
+        <textarea id="checkin-input" placeholder="What did you get done today? What's next?" required></textarea>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+    <div class="tasks-section">
+      <h2>Your Tasks</h2>
+      <ul id="tasks-list"></ul>
+    </div>
+    <div class="summary-section">
+      <h2>Summary</h2>
+      <div id="summary-content"></div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
