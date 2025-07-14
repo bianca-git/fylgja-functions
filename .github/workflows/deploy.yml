@@ -29,13 +29,10 @@ jobs:
           cd functions
           pip install -r requirements.txt
 
-      - name: Run Tests
+      - name: Run Tests with Firebase Emulators
         run: |
           cd functions
-          firebase emulators:start &
-          sleep 10 # Wait for emulators to start
-          pytest
-          kill %1 # Kill the emulators
+          firebase emulators:exec --only functions,firestore "pytest"
 
       - name: Build web UI (if needed)
         run: echo "No build step for plain HTML/JS"
