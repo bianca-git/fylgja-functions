@@ -83,12 +83,17 @@ def get_tasks(request: Request) -> Response:
 
 
 @https_fn.on_request()
-def mark_task_done(request: Request, task_id=None) -> Response:
+def mark_task_done(request: Request) -> Response:
     db = get_db()
     try:
+        data = request.get_json()
+        task_id = data.get("taskId")
         if not task_id:
-            # fallback for local testing or if not provided
-            task_id = request.path.split("/")[-2]
+            return Response(
+                json.dumps({"error": "taskId is required"}),
+                status=400,
+                mimetype="application/json",
+            )
         task_ref = db.collection("tasks").document(task_id)
         task_ref.update({"status": "Done", "dateCompleted": gcf.SERVER_TIMESTAMP})
         return Response(
@@ -103,12 +108,17 @@ def mark_task_done(request: Request, task_id=None) -> Response:
 
 
 @https_fn.on_request()
-def update_task(request: Request, task_id=None) -> Response:
+def update_task(request: Request) -> Response:
     db = get_db()
     try:
-        if not task_id:
-            task_id = request.path.split("/")[-1]
         data = request.get_json()
+        task_id = data.get("taskId")
+        if not task_id:
+            return Response(
+                json.dumps({"error": "taskId is required"}),
+                status=400,
+                mimetype="application/json",
+            )
         update_data = {}
         for field in ["taskDescription", "status", "reminderTime"]:
             if field in data:
