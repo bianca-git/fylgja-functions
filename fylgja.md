@@ -88,10 +88,10 @@
 
 - [x] Set up Firebase project, enable Firestore and Cloud Functions (Python)
 - [ ] Set up Firebase Hosting for the web UI
-- [ ] Design Firestore schema (`users`, `tasks` collections)
+- [x] Design Firestore schema (`users`, `tasks` collections)
 - [ ] Build web UI (check-in prompt, task list, summaries)
 - [ ] Implement backend endpoints (check-ins, tasks, summaries)
-- [ ] Integrate backend with Firestore
+- [x] Integrate backend with Firestore
 - [ ] Integrate NLP service for task/intent extraction (using Genkit via a Node.js Cloud Function)
 - [ ] Implement reminders (scheduled functions or client-side notifications)
 - [ ] Implement weekly/monthly summaries
