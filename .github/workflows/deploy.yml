@@ -34,7 +34,7 @@ jobs:
 
       - name: Deploy to Firebase
         env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_FYL_GJA }}
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_SECRET }}
         run: |
-          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_FYL_GJA }}' > ${HOME}/gcloud.json
-          firebase deploy --token "${{ secrets.FIREBASE_SERVICE_ACCOUNT_FYL_GJA }}" --non-interactive
+          echo '${{ secrets.FIREBASE_SECRET }}' > ${HOME}/gcloud.json
+          firebase deploy --token "${{ secrets.FIREBASE_SECRET }}" --non-interactive
