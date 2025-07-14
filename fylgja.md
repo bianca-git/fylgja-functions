@@ -87,10 +87,10 @@
 ## Implementation Checklist
 
 - [x] Set up Firebase project, enable Firestore and Cloud Functions (Python)
-- [ ] Set up Firebase Hosting for the web UI
+- [x] Set up Firebase Hosting for the web UI
 - [x] Design Firestore schema (`users`, `tasks` collections)
-- [ ] Build web UI (check-in prompt, task list, summaries)
-- [ ] Implement backend endpoints (check-ins, tasks, summaries)
+- [x] Build web UI (check-in prompt, task list, summaries)
+- [x] Implement backend endpoints (check-ins, tasks, summaries)
 - [x] Integrate backend with Firestore
 - [ ] Integrate NLP service for task/intent extraction (using Genkit via a Node.js Cloud Function)
 - [ ] Implement reminders (scheduled functions or client-side notifications)
