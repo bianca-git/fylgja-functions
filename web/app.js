@@ -111,13 +111,6 @@ function setLoading(id, loading) {
 fetchTasks();
 fetchSummary();
 
-// TODO:
-// - Set API_BASE to your deployed Functions URL if not running locally
-// - Add authentication if needed (currently assumes open endpoints)
-// - Improve error handling and UX as desired
-
-const API_BASE = '/api'; // Adjust if deploying under a different path
-
 // DOM Elements
 const checkinForm = document.getElementById('checkin-form');
 const checkinInput = document.getElementById('checkin-input');
