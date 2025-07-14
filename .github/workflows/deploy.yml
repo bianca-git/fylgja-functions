@@ -37,4 +37,4 @@ jobs:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_FYL_GJA }}
         run: |
           echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_FYL_GJA }}' > ${HOME}/gcloud.json
-          firebase deploy --token "${{ secrets.FIREBASE_SERVICE_ACCOUNT_FYL_GJA }}" --project YOUR_PROJECT_ID --non-interactive --only hosting,functions
+          firebase deploy --token "${{ secrets.FIREBASE_SERVICE_ACCOUNT_FYL_GJA }}" --project fyl-gja --non-interactive --only hosting,functions
